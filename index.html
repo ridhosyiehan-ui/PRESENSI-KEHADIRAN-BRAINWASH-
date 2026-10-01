@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Presensi Kelas 10</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    background: #2563eb;
+    color: white;
+    padding: 25px 15px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 25px;
+    margin-bottom: 7px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 15px;
+}
+
+.panel {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.login {
+    max-width: 450px;
+    margin: 50px auto;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    margin-top: 7px;
+    margin-bottom: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 15px;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 11px 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+}
+
+.logout {
+    background: #ef4444;
+    color: white;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.search {
+    margin-top: 5px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.summary-box {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.07);
+}
+
+.summary-box h3 {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.summary-box p {
+    font-size: 27px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.student {
+    background: white;
+    border-radius: 13px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-info {
+    flex: 1;
+}
+
+.number {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.code {
+    color: #2563eb;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.name {
+    font-size: 16px;
+    margin-top: 3px;
+}
+
+.buttons {
+    display: flex;
+    gap: 7px;
+}
+
+.hadir {
+    background: #22c55e;
+    color: white;
+}
+
+.tidak {
+    background: #ef4444;
+    color: white;
+}
+
+.active {
+    outline: 3px solid rgba(0,0,0,.18);
+}
+
+.daftar-hadir {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.logout-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.hadir-list {
+    display: none;
+    margin-top: 10px;
+}
+
+.hadir-item {
+    background: #f8fafc;
+    padding: 12px;
+    margin-bottom: 7px;
+    border-radius: 8px;
+    border-left: 4px solid #22c55e;
+}
+
+.empty {
+    background: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 12px;
+    color: #64748b;
+}
+
+.loading {
+    text-align: center;
+    padding: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 650px) {
+
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .student {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .buttons {
+        width: 100%;
+    }
+
+    .buttons button {
+        flex: 1;
+    }
+
+    .logout-area {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+
+    <div class="panel login">
+
+        <h2 style="text-align:center;margin-bottom:20px;">
+            🔐 Login Presensi
+        </h2>
+
+        <label><b>Email</b></label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Email admin/guru"
+        >
+
+        <label><b>Password</b></label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+        >
+
+        <button
+            class="login-btn"
+            onclick="login()">
+            LOGIN
+        </button>
+
+        <p
+            id="loginError"
+            style="color:red;text-align:center;margin-top:12px;">
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= APLIKASI ================= -->
+
+<div id="app" class="hidden">
+
+<header>
+
+    <h1>📋 PRESENSI KELAS 10</h1>
+
+    <p>X-1 sampai X-12</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- USER -->
+
+    <div class="panel">
+
+        <div class="logout-area">
+
+            <div>
+
+                <b>Login sebagai:</b>
+
+                <span id="userRole">
+                    -
+                </span>
+
+            </div>
+
+            <button
+                class="logout"
+                onclick="logout()">
+
+                Keluar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div class="panel">
+
+        <div class="controls">
+
+            <div>
+
+                <label>
+                    <b>Pilih Kelas</b>
+                </label>
+
+                <select
+                    id="kelas"
+                    onchange="loadStudents()">
+
+                    <option value="X-1">X-1</option>
+                    <option value="X-2">X-2</option>
+                    <option value="X-3">X-3</option>
+                    <option value="X-4">X-4</option>
+                    <option value="X-5">X-5</option>
+                    <option value="X-6">X-6</option>
+                    <option value="X-7">X-7</option>
+                    <option value="X-8">X-8</option>
+                    <option value="X-9">X-9</option>
+                    <option value="X-10">X-10</option>
+                    <option value="X-11">X-11</option>
+                    <option value="X-12">X-12</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    <b>Tanggal</b>
+                </label>
+
+                <input
+                    type="date"
+                    id="tanggal"
+                    onchange="loadStudents()">
+
+            </div>
+
+        </div>
+
+
+        <input
+            class="search"
+            type="text"
+            id="search"
+            placeholder="🔎 Cari 3 huruf awal atau nama lengkap..."
+            oninput="displayStudents()">
+
+    </div>
+
+
+    <!-- RINGKASAN -->
+
+    <div class="summary">
+
+        <div class="summary-box">
+
+            <h3>Total Siswa</h3>
+
+            <p id="total">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>Hadir</h3>
+
+            <p id="jumlahHadir">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>Tidak Hadir</h3>
+
+            <p id="jumlahTidakHadir">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- DAFTAR HADIR -->
+
+    <div class="panel">
+
+        <button
+            class="daftar-hadir"
+            onclick="toggleHadir()">
+
+            👥 Lihat Siswa Hadir ▼
+
+        </button>
+
+
+        <div
+            id="hadirList"
+            class="hadir-list">
+
+        </div>
+
+    </div>
+
+
+    <!-- SISWA -->
+
+    <div id="daftarSiswa">
+
+        <div class="loading">
+            Memuat data siswa...
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- FIREBASE -->
+<!-- ================================================= -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+
+<script>
+
+/* =================================================
+   FIREBASE CONFIG
+   GANTI DENGAN CONFIG FIREBASE MILIKMU
+================================================= */
+
+const firebaseConfig = {
+
+    apiKey: "ISI_API_KEY",
+
+    authDomain: "ISI_AUTH_DOMAIN",
+
+    databaseURL: "ISI_DATABASE_URL",
+
+    projectId: "ISI_PROJECT_ID",
+
+    storageBucket: "ISI_STORAGE_BUCKET",
+
+    messagingSenderId: "ISI_MESSAGING_SENDER_ID",
+
+    appId: "ISI_APP_ID"
+
+};
+
+
+/* Jalankan Firebase */
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+const db = firebase.database();
+
+
+/* =================================================
+   VARIABEL
+================================================= */
+
+let siswaData = {};
+
+let roleUser = "";
+
+let currentListener = null;
+
+
+/* =================================================
+   TANGGAL HARI INI
+================================================= */
+
+const tanggalInput =
+    document.getElementById("tanggal");
+
+const hariIni = new Date();
+
+tanggalInput.value =
+    hariIni.getFullYear() +
+    "-" +
+    String(hariIni.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(hariIni.getDate()).padStart(2, "0");
+
+
+/* =================================================
+   LOGIN
+================================================= */
+
+function login() {
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("loginError");
+
+    error.textContent = "";
+
+    if (!email || !password) {
+
+        error.textContent =
+            "Email dan password harus diisi.";
+
+        return;
+
+    }
+
+
+    auth.signInWithEmailAndPassword(
+        email,
+        password
+    )
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        errorMessage(error);
+
+    });
+
+}
+
+
+/* =================================================
+   ERROR LOGIN
+================================================= */
+
+function errorMessage(error) {
+
+    const box =
+        document.getElementById("loginError");
+
+    if (
+        error.code ===
+        "auth/invalid-credential"
+    ) {
+
+        box.textContent =
+            "Email atau password salah.";
+
+    }
+
+    else {
+
+        box.textContent =
+            "Login gagal: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =================================================
+   CEK LOGIN
+================================================= */
+
+auth.onAuthStateChanged(async function(user) {
+
+    if (!user) {
+
+        document
+            .getElementById("loginPage")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("app")
+            .classList.add("hidden");
+
+        return;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .ref("users/" + user.uid)
+                .once("value");
+
+
+        const data =
+            snapshot.val();
+
+
+        if (!data ||
+            (data.role !== "admin" &&
+             data.role !== "guru")) {
+
+            await auth.signOut();
+
+            alert(
+                "Akun ini tidak memiliki akses."
+            );
+
+            return;
+
+        }
+
+
+        roleUser =
+            data.role;
+
+
+        document
+            .getElementById("userRole")
+            .textContent =
+            roleUser.toUpperCase();
+
+
+        document
+            .getElementById("loginPage")
+            .classList.add("hidden");
+
+        document
+            .getElementById("app")
+            .classList.remove("hidden");
+
+
+        loadStudents();
+
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Tidak dapat membaca data pengguna."
+        );
+
+    }
+
+});
+
+
+/* =================================================
+   LOGOUT
+================================================= */
+
+function logout() {
+
+    auth.signOut();
+
+}
+
+
+/* =================================================
+   LOAD DATA SISWA
+================================================= */
+
+function loadStudents() {
+
+    const kelas =
+        document.getElementById("kelas").value;
+
+
+    const daftar =
+        document.getElementById("daftarSiswa");
+
+
+    daftar.innerHTML =
+        `<div class="loading">
+            Memuat siswa...
+        </div>`;
+
+
+    db.ref("students/" + kelas)
+        .once("value")
+        .then(snapshot => {
+
+            siswaData =
+                snapshot.val() || {};
+
+            displayStudents();
+
+            listenAttendance();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            daftar.innerHTML =
+                `<div class="empty">
+                    Gagal memuat data siswa.
+                </div>`;
+
+        });
+
+}
+
+
+/* =================================================
+   TAMPILKAN SISWA
+================================================= */
+
+function displayStudents() {
+
+    const daftar =
+        document.getElementById("daftarSiswa");
+
+
+    const search =
+        document
+            .getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    daftar.innerHTML = "";
+
+
+    let found = 0;
+
+
+    Object.keys(siswaData)
+        .sort((a,b) => Number(a) - Number(b))
+        .forEach(id => {
+
+            const siswa =
+                siswaData[id];
+
+
+            const nama =
+                String(siswa.nama || "");
+
+
+            const kode =
+                tigaHuruf(nama)
+                    .toLowerCase();
+
+
+            if (
+                search &&
+                !kode.includes(search) &&
+                !nama.toLowerCase().includes(search)
+            ) {
+
+                return;
+
+            }
+
+
+            found++;
+
+
+            const status =
+                siswa.status || "";
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "student";
+
+
+            div.innerHTML = `
+
+                <div class="student-info">
+
+                    <div class="number">
+                        No. ${id}
+                    </div>
+
+                    <div class="code">
+                        ${tigaHuruf(nama)}
+                    </div>
+
+                    <div class="name">
+                        ${nama}
+                    </div>
+
+                </div>
+
+                <div class="buttons">
+
+                    <button
+                        class="hadir ${
+                            status === "Hadir"
+                            ? "active"
+                            : ""
+                        }"
+                        onclick="setAttendance('${id}','Hadir')">
+
+                        ${
+                            status === "Hadir"
+                            ? "Hadir"
+                            : "Hadir"
+                        }
+
+                    </button>
+
+
+                    <button
+                        class="tidak ${
+                            status === "Tidak Hadir"
+                            ? "active"
+                            : ""
+                        }"
+                        onclick="setAttendance('${id}','Tidak Hadir')">
+
+                        ${
+                            status === "Tidak Hadir"
+                            ? "Tidak Hadir"
+                            : "Tidak Hadir"
+                        }
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            daftar.appendChild(div);
+
+        });
+
+
+    if (found === 0) {
+
+        daftar.innerHTML =
+            `<div class="empty">
+                Siswa tidak ditemukan.
+            </div>`;
+
+    }
+
+}
+
+
+/* =================================================
+   3 HURUF
+================================================= */
+
+function tigaHuruf(nama) {
+
+    return nama
+        .replace(/[^a-zA-Z]/g, "")
+        .substring(0,3)
+        .toUpperCase();
+
+}
+
+
+/* =================================================
+   SIMPAN PRESENSI REAL-TIME
+================================================= */
+
+function setAttendance(id, status) {
+
+    const kelas =
+        document.getElementById("kelas").value;
+
+    const tanggal =
+        document.getElementById("tanggal").value;
+
+
+    db.ref(
+        "attendance/" +
+        tanggal +
+        "/" +
+        kelas +
+        "/" +
+        id
+    )
+    .set({
+
+        status: status,
+
+        updatedAt:
+            firebase.database.ServerValue.TIMESTAMP,
+
+        updatedBy:
+            auth.currentUser.uid
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Gagal menyimpan presensi."
+        );
+
+    });
+
+}
+
+
+/* =================================================
+   LISTENER PRESENSI
+   DATA BERUBAH -> SEMUA PERANGKAT IKUT BERUBAH
+================================================= */
+
+function listenAttendance() {
+
+    const kelas =
+        document.getElementById("kelas").value;
+
+    const tanggal =
+        document.getElementById("tanggal").value;
+
+
+    if (currentListener) {
+
+        currentListener.off();
+
+    }
+
+
+    currentListener =
+        db.ref(
+            "attendance/" +
+            tanggal +
+            "/" +
+            kelas
+        );
+
+
+    currentListener.on(
+        "value",
+        snapshot => {
+
+            const attendance =
+                snapshot.val() || {};
+
+
+            Object.keys(siswaData)
+                .forEach(id => {
+
+                    if (
+                        attendance[id]
+                    ) {
+
+                        siswaData[id].status =
+                            attendance[id].status;
+
+                    }
+
+                    else {
+
+                        siswaData[id].status =
+                            "";
+
+                    }
+
+                });
+
+
+            updateSummary(attendance);
+
+            displayStudents();
+
+            displayHadir(attendance);
+
+        }
+
+    );
+
+}
+
+
+/* =================================================
+   RINGKASAN
+================================================= */
+
+function updateSummary(attendance) {
+
+    let hadir = 0;
+
+    let tidakHadir = 0;
+
+
+    Object.values(attendance)
+        .forEach(item => {
+
+            if (
+                item.status === "Hadir"
+            ) {
+
+                hadir++;
+
+            }
+
+
+            if (
+                item.status === "Tidak Hadir"
+            ) {
+
+                tidakHadir++;
+
+            }
+
+        });
+
+
+    document
+        .getElementById("total")
+        .textContent =
+        Object.keys(siswaData).length;
+
+
+    document
+        .getElementById("jumlahHadir")
+        .textContent =
+        hadir;
+
+
+    document
+        .getElementById("jumlahTidakHadir")
+        .textContent =
+        tidakHadir;
+
+}
+
+
+/* =================================================
+   DAFTAR SISWA HADIR
+================================================= */
+
+function displayHadir(attendance) {
+
+    const list =
+        document.getElementById("hadirList");
+
+
+    list.innerHTML = "";
+
+
+    let jumlah = 0;
+
+
+    Object.keys(siswaData)
+        .sort((a,b) => Number(a) - Number(b))
+        .forEach(id => {
+
+            const data =
+                attendance[id];
+
+
+            if (
+                data &&
+                data.status === "Hadir"
+            ) {
+
+                jumlah++;
+
+
+                const nama =
+                    siswaData[id].nama;
+
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "hadir-item";
+
+
+                div.innerHTML = `
+                    <b>${id}. ${nama}</b>
+                    <br>
+                    <small>
+                        ${tigaHuruf(nama)} — HADIR
+                    </small>
+                `;
+
+
+                list.appendChild(div);
+
+            }
+
+        });
+
+
+    if (jumlah === 0) {
+
+        list.innerHTML =
+            `<div class="empty">
+                Belum ada siswa yang hadir.
+            </div>`;
+
+    }
+
+}
+
+
+/* =================================================
+   BUKA/TUTUP DAFTAR HADIR
+================================================= */
+
+function toggleHadir() {
+
+    const list =
+        document.getElementById("hadirList");
+
+
+    if (
+        list.style.display === "block"
+    ) {
+
+        list.style.display =
+            "none";
+
+    }
+
+    else {
+
+        list.style.display =
+            "block";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
